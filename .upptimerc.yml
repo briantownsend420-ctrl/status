@@ -30,6 +30,18 @@ sites:
     url: https://waterviewtechnologies.com/download
     expectedStatusCodes: [200]
     __dangerous__body_down_if_text_missing: Install
+  # Routing engine (Valhalla). /health/routing plans a real 1 km route through
+  # the engine (cached 60 s server-side) and answers 503 if it cannot — a live
+  # process with no tileset counts as DOWN. Added 2026-08-17.
+  - name: Routing engine
+    url: https://api.waterviewtechnologies.com/health/routing
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: '"engine":"valhalla"'
+
+# Upptime DELETES an incident issue that was open <15 min (treats it as a blip)
+# instead of closing it. Set true to keep a closed issue as the record instead.
+# (Left at default after the 2026-08-17 drill; flip if you want blips on record.)
+# skipDeleteIssues: true
 
 # Who gets the GitHub notification email when an incident issue is opened.
 assignees:
