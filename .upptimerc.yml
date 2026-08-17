@@ -1,31 +1,50 @@
-# Change these first
-owner: upptime # Your GitHub organization or username, where this repository lives
-repo: upptime # The name of this repository
+# Flock U — Upptime configuration
+# Source of truth lives in the FlockU repo at ops/monitoring/upptimerc.yml;
+# the live copy is .upptimerc.yml in github.com/briantownsend420-ctrl/status.
+# Checks run every 5 minutes on GitHub Actions (external to our network), open a
+# GitHub Issue on DOWN (assignee gets the email), close it on recovery, and
+# publish https://briantownsend420-ctrl.github.io/status/.
+
+owner: briantownsend420-ctrl
+repo: status
 
 sites:
-  - name: Google
-    url: https://www.google.com
-  - name: Wikipedia
-    url: https://en.wikipedia.org
-  - name: Hacker News
-    url: https://news.ycombinator.com
-  - name: Secret Site
-    url: $SECRET_SITE
+  # The API process itself. Body check catches a Cloudflare 502 page or an
+  # error body — a plain status check would not.
+  - name: API
+    url: https://api.waterviewtechnologies.com/health
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: '"ok":true'
+  # API + database. `/ready` answers {"ok":true,"db":"up"} only when Postgres answers.
+  - name: API + database
+    url: https://api.waterviewtechnologies.com/ready
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: '"db":"up"'
+  # Public website
+  - name: Website
+    url: https://waterviewtechnologies.com/
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: Flock U
+  # Install page (do NOT monitor /flocku.apk itself — 84 MB per check for nothing)
+  - name: Download page
+    url: https://waterviewtechnologies.com/download
+    expectedStatusCodes: [200]
+    __dangerous__body_down_if_text_missing: Install
+
+# Who gets the GitHub notification email when an incident issue is opened.
+assignees:
+  - briantownsend420-ctrl
 
 status-website:
-  # Add your custom domain name, or remove the `cname` line if you don't have a domain
-  # Uncomment the `baseUrl` line if you don't have a custom domain and add your repo name there
-  cname: demo.upptime.js.org
-  # baseUrl: /your-repo-name
-  logoUrl: https://raw.githubusercontent.com/upptime/upptime.js.org/master/static/img/icon.svg
-  name: Upptime
-  introTitle: "**Upptime** is the open-source uptime monitor and status page, powered entirely by GitHub."
-  introMessage: This is a sample status page which uses **real-time** data from our [GitHub repository](https://github.com/upptime/upptime). No server required — just GitHub Actions, Issues, and Pages. [**Get your own for free**](https://github.com/upptime/upptime)
+  baseUrl: /status
+  logoUrl: https://waterviewtechnologies.com/apple-touch-icon.png
+  name: Flock U status
+  introTitle: "**Flock U** — live status of the API, database and website."
+  introMessage: Checks run every five minutes from GitHub's network, independent of our own hosting. Incidents open automatically and close when service recovers.
   navbar:
     - title: Status
       href: /
-    - title: GitHub
-      href: https://github.com/$OWNER/$REPO
-
-# Upptime also supports notifications, assigning issues, and more
-# See https://upptime.js.org/docs/configuration
+    - title: Flock U
+      href: https://waterviewtechnologies.com
+    - title: Get the app
+      href: https://waterviewtechnologies.com/download
