@@ -1,7 +1,7 @@
 url: https://api.waterviewtechnologies.com/health
-status: down
-code: 502
-responseTime: 151
-lastUpdated: 2026-08-17T05:24:49.309Z
+status: up
+code: 200
+responseTime: 157
+lastUpdated: 2026-08-17T05:31:04.437Z
 startTime: 2026-08-17T04:47:38.624Z
 generator: Upptime <https://github.com/upptime/upptime>
